@@ -30,18 +30,18 @@ Para que possa testar as conexões com o banco de dados Oracle e o módulo Conex
       - Exemplo de utilização para consultas simples:
 
         ```python
-       def listar_produtos(self, oracle:OracleQueries, need_connect:bool=False):
-           query = """
-                   select f.codigo_produto
-                       , f.nome
-                       , f.valor
-                   from produtoss f
-                   order by f.nome
-                   """
-           if need_connect:
-               oracle.connect()
-           print(oracle.sqlToDataFrame(query))
-        ```
+          def listar_produtos(self, oracle:OracleQueries, need_connect:bool=False):
+              query = """
+                      select f.codigo_produto
+                          , f.nome
+                          , f.valor
+                      from produtoss f
+                      order by f.nome
+                      """
+              if need_connect:
+                  oracle.connect()
+              print(oracle.sqlToDataFrame(query))
+           ```
       - Exemplo de utilização para alteração de registros
 
         ```python
