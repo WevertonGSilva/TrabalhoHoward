@@ -45,36 +45,36 @@ Para que possa testar as conexões com o banco de dados Oracle e o módulo Conex
       - Exemplo de utilização para alteração de registros
 
         ```python
-        from conexion.oracle_queries import OracleQueries
-       def inserir_produto(self) -> Produto:
-           ''' Ref.: https://cx-oracle.readthedocs.io/en/latest/user_guide/plsql_execution.html#anonymous-pl-sql-blocks'''
-           
-           # Cria uma nova conexão com o banco que permite alteração
-           oracle = OracleQueries(can_write=True)
-           oracle.connect()
-   
-           # Solicita ao usuario o novo codigo_produto
-           codigo_produto = input("codigo_produto (Novo): ")
-   
-           if self.verifica_existencia_produto(oracle, codigo_produto):
-               # Solicita ao usuario o novo nome
-               nome = input("Nome (Novo): ")
-               # Solicita ao usuario o novo valor do produto
-               valor = input("Valor (Novo): ") 
-               # Insere e persiste o novo produto
-               oracle.write(f"insert into produtoss values ('{codigo_produto}', '{nome}', '{valor}')")
-               # Recupera os dados do novo produto criado transformando em um DataFrame
-               df_produto = oracle.sqlToDataFrame(f"select codigo_produto, nome, valor from produtoss where codigo_produto = '{codigo_produto}'")
-               # Cria um novo objeto produto
-               novo_produto = Produto(df_produto.codigo_produto.values[0], df_produto.nome.values[0], df_produto.valor.values[0])
-               # Exibe os atributos do novo produto
-               print(novo_produto.to_string())
-               # Retorna o objeto novo_produto para utilização posterior, caso necessário
-               return novo_produto
-           else:
-               print(f"O codigo_produto {codigo_produto} já está cadastrado.")
-               return None
-        ```
+           from conexion.oracle_queries import OracleQueries
+          def inserir_produto(self) -> Produto:
+              ''' Ref.: https://cx-oracle.readthedocs.io/en/latest/user_guide/plsql_execution.html#anonymous-pl-sql-blocks'''
+              
+              # Cria uma nova conexão com o banco que permite alteração
+              oracle = OracleQueries(can_write=True)
+              oracle.connect()
+      
+              # Solicita ao usuario o novo codigo_produto
+              codigo_produto = input("codigo_produto (Novo): ")
+      
+              if self.verifica_existencia_produto(oracle, codigo_produto):
+                  # Solicita ao usuario o novo nome
+                  nome = input("Nome (Novo): ")
+                  # Solicita ao usuario o novo valor do produto
+                  valor = input("Valor (Novo): ") 
+                  # Insere e persiste o novo produto
+                  oracle.write(f"insert into produtoss values ('{codigo_produto}', '{nome}', '{valor}')")
+                  # Recupera os dados do novo produto criado transformando em um DataFrame
+                  df_produto = oracle.sqlToDataFrame(f"select codigo_produto, nome, valor from produtoss where codigo_produto = '{codigo_produto}'")
+                  # Cria um novo objeto produto
+                  novo_produto = Produto(df_produto.codigo_produto.values[0], df_produto.nome.values[0], df_produto.valor.values[0])
+                  # Exibe os atributos do novo produto
+                  print(novo_produto.to_string())
+                  # Retorna o objeto novo_produto para utilização posterior, caso necessário
+                  return novo_produto
+              else:
+                  print(f"O codigo_produto {codigo_produto} já está cadastrado.")
+                  return None
+           ```
       - Outros exemplos: [test.py](src/test.py)
       - Caso esteja utilizando na máquina virtual antiga, você precisará alterar o método connect de:
           ```python
