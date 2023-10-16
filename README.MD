@@ -1,6 +1,6 @@
 # Exemplo de Sistema em Python fazendo CRUD no Oracle
 
-Esse sistema de exemplo é composto por um conjunto de tabelas que representam agendamentos de vendas, contendo tabelas como: pacientes, medicos, produtos, agendamentos e itens de agendamento.
+Esse sistema de exemplo é composto por um conjunto de tabelas que representam um carrinho de compras, contendo tabelas como: Produtos, Carrinhos e Itens Carrinhos.
 
 O sistema exige que as tabelas existam, então basta executar o script Python a seguir para criação das tabelas e preenchimento de dados de exemplos:
 ```shell
@@ -19,10 +19,10 @@ Para que possa testar as conexões com o banco de dados Oracle e o módulo Conex
 
 ## Organização
 - [diagrams](diagrams): Nesse diretório está o [diagrama relacional](diagrams/DIAGRAMA_RELACIONAL_AGENDAMENTOS.pdf) (lógico) do sistema.
-    * O sistema possui cinco entidades: PRODUTOS, PACIENTES, MEDICOS, AGENDAMENTOS e ITENS_AGENDAMENTO
+    * O sistema possui três entidades: Carrinhos, ItensCarrinhos e Produtos
 - [sql](sql): Nesse diretório estão os scripts para criação das tabelas e inserção de dados fictícios para testes do sistema
     * Certifique-se de que o usuário do banco possui todos os privilégios antes de executar os scripts de criação, caso ocorra erro, execute o comando a seguir com o superusuário via SQL Developer: `GRANT ALL PRIVILEGES TO LABDATABASE;`
-    * [create_tables_agendamentos.sql](sql/create_tables_agendamentos.sql): script responsável pela criação das tabelas, relacionamentos e criação de permissão no esquema LabDatabase.
+    * [create_tables.sql](sql/create_tables.sql): script responsável pela criação das tabelas, relacionamentos e criação de permissão no esquema LabDatabase.
     * [inserting_samples_records.sql](sql/inserting_samples_records.sql): script responsável pela inserção dos registros fictícios para testes do sistema.
     * [inserting_samples_related_records.sql](sql/inserting_samples_related_records.sql): script responsável pela inserção dos registros fictícios de agendamentos e itens de agendamentos para testes do sistema utilizando blocos PL/SQL.
 - [src](src): Nesse diretório estão os scripts do sistema
@@ -30,45 +30,50 @@ Para que possa testar as conexões com o banco de dados Oracle e o módulo Conex
       - Exemplo de utilização para consultas simples:
 
         ```python
-        def listar_pacientes(self, oracle:OracleQueries, need_connect:bool=False):
-            query = """
-                    select c.cpf
-                        , c.nome 
-                    from pacientes c
-                    order by c.nome
-                    """
-            if need_connect:
-                oracle.connect()
-            print(oracle.sqlToDataFrame(query))
+       def listar_produtos(self, oracle:OracleQueries, need_connect:bool=False):
+           query = """
+                   select f.codigo_produto
+                       , f.nome
+                       , f.valor
+                   from produtoss f
+                   order by f.nome
+                   """
+           if need_connect:
+               oracle.connect()
+           print(oracle.sqlToDataFrame(query))
         ```
       - Exemplo de utilização para alteração de registros
 
         ```python
         from conexion.oracle_queries import OracleQueries
-        def inserir_paciente(self) -> Paciente:
-            # Cria uma nova conexão com o banco que permite alteração
-            oracle = OracleQueries(can_write=True)
-            oracle.connect()
-
-            # Solicita ao usuario o novo CPF
-            cpf = input("CPF (Novo): ")
-
-            if self.verifica_existencia_paciente(oracle, cpf):
-                # Solicita ao usuario o novo nome
-                nome = input("Nome (Novo): ")
-                # Insere e persiste o novo paciente
-                oracle.write(f"insert into pacientes values ('{cpf}', '{nome}')")
-                # Recupera os dados do novo paciente criado transformando em um DataFrame
-                df_paciente = oracle.sqlToDataFrame(f"select cpf, nome from pacientes where cpf = '{cpf}'")
-                # Cria um novo objeto Paciente
-                novo_paciente = Paciente(df_paciente.cpf.values[0], df_paciente.nome.values[0])
-                # Exibe os atributos do novo paciente
-                print(novo_paciente.to_string())
-                # Retorna o objeto novo_paciente para utilização posterior, caso necessário
-                return novo_paciente
-            else:
-                print(f"O CPF {cpf} já está cadastrado.")
-                return None
+       def inserir_produto(self) -> Produto:
+           ''' Ref.: https://cx-oracle.readthedocs.io/en/latest/user_guide/plsql_execution.html#anonymous-pl-sql-blocks'''
+           
+           # Cria uma nova conexão com o banco que permite alteração
+           oracle = OracleQueries(can_write=True)
+           oracle.connect()
+   
+           # Solicita ao usuario o novo codigo_produto
+           codigo_produto = input("codigo_produto (Novo): ")
+   
+           if self.verifica_existencia_produto(oracle, codigo_produto):
+               # Solicita ao usuario o novo nome
+               nome = input("Nome (Novo): ")
+               # Solicita ao usuario o novo valor do produto
+               valor = input("Valor (Novo): ") 
+               # Insere e persiste o novo produto
+               oracle.write(f"insert into produtoss values ('{codigo_produto}', '{nome}', '{valor}')")
+               # Recupera os dados do novo produto criado transformando em um DataFrame
+               df_produto = oracle.sqlToDataFrame(f"select codigo_produto, nome, valor from produtoss where codigo_produto = '{codigo_produto}'")
+               # Cria um novo objeto produto
+               novo_produto = Produto(df_produto.codigo_produto.values[0], df_produto.nome.values[0], df_produto.valor.values[0])
+               # Exibe os atributos do novo produto
+               print(novo_produto.to_string())
+               # Retorna o objeto novo_produto para utilização posterior, caso necessário
+               return novo_produto
+           else:
+               print(f"O codigo_produto {codigo_produto} já está cadastrado.")
+               return None
         ```
       - Outros exemplos: [test.py](src/test.py)
       - Caso esteja utilizando na máquina virtual antiga, você precisará alterar o método connect de:
