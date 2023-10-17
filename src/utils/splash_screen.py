@@ -40,7 +40,7 @@ class SplashScreen:
     def get_updated_screen(self):
         return f"""
         ########################################################
-        #                   SISTEMA DE VENDAS                     
+        #                   SISTEMA DE CARRINHO DE COMPRAS                     
         #                                                         
         #  TOTAL DE REGISTROS:                                    
         #      1 - CARRINHOS:         {str(self.get_total_carrinhos()).rjust(5)}
