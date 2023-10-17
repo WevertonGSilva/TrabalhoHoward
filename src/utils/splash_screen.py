@@ -11,7 +11,7 @@ class SplashScreen:
         # Consultas de contagem de registros - fim
 
         # Nome(s) do(s) criador(es)
-        self.created_by = "Weverton"
+        self.created_by = "Weverton Gomes da Silva, Diogo Rocha da Silva Pelanda, Ronaldo Luiz de Almeida Junior, Taciane da Silva Santos, João Pedro Xavier Peccini, Arianne Geremias Batista, Mayra Lazarone Barros "
         self.professor = "Prof. M.Sc. Howard Roatti"
         self.disciplina = "Banco de Dados"
         self.semestre = "2023/2"
@@ -48,6 +48,7 @@ class SplashScreen:
         #      3 - ITENSCARRINHOS:          {str(self.get_total_itensCarrinhos()).rjust(5)}
         #
         #  CRIADO POR: {self.created_by}
+
         #
         #  PROFESSOR:  {self.professor}
         #
